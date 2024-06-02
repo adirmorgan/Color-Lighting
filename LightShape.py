@@ -76,8 +76,12 @@ class LightShape:
     def get_object_mask(self):
         return self.__object_mask
 
-    def update_object_mask(self, mask, K=5):
-        self.__object_mask = (mask - self.__object_mask) * (2/(K+1)) + self.__object_mask
+    def update_object_mask(self, mask, k=1):
+        """
+        Using EMA for updating the mask
+        k=1 - No EMA
+        """
+        self.__object_mask = (mask - self.__object_mask) * (2/(k+1)) + self.__object_mask
 
     def __terminate_change(self):
         self.__changing = False
