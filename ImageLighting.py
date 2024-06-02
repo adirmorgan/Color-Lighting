@@ -44,10 +44,7 @@ def light_multiple_shapes(img_yuv, Shapes):
         img_luma = img_lightned[:, :, 0]
         img_luma += (lighting_level*mask).astype(np.uint8)
 
-        if lighting_level > 0:
-            handle_overflow(img_luma, img_yuv[:, :, 0])
-        else:
-            handle_underflow(img_luma, img_yuv[:, :, 0])
+        handle_overflow(img_luma, img_yuv[:, :, 0])
 
     img_lightned = cv2.cvtColor(img_lightned, cv2.COLOR_YUV2RGB)
     return img_lightned
@@ -59,11 +56,3 @@ def handle_overflow(img_modified: np.ndarray, img_org: np.ndarray) -> None:
     """
     overflow_pixels = img_modified < img_org
     img_modified[overflow_pixels] = np.iinfo(img_modified.dtype).max
-
-
-def handle_underflow(img_modified: np.ndarray, img_org: np.ndarray) -> None:
-    """
-    Check for overflows in a modified and handle by assigning dtype max value
-    """
-    underflow_pixels = img_modified > img_org
-    img_modified[underflow_pixels] = np.iinfo(img_modified.dtype).min
